@@ -13,6 +13,10 @@ import jakarta.persistence.LockModeType;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    
+ 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<User> findOneWithLockingById(int id);
+
+  boolean existsByName(String name);
 }
