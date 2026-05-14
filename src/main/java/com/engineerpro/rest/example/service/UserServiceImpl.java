@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.engineerpro.rest.example.dto.CreateUserRequest;
 import com.engineerpro.rest.example.dto.UserResponse;
 import com.engineerpro.rest.example.exception.DuplicatedIdempotentKeyException;
+import com.engineerpro.rest.example.exception.DuplicatedNameKeyException;
 
 
 
@@ -64,8 +65,22 @@ public Page<UserResponse> getAllUsers(Pageable pageable) {
 
 @Override
 public UserResponse updateUser(Integer id, UpdateUserRequest request) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+    User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    if(request.getName() != null && !request.getName().equals(user.getName())){
+      boolean isDuplicate =userRepository.existsByNameAndIdNot(request.getName(), id);
+      if(isDuplicate){
+        throw new DuplicatedNameKeyException();
+      }
+
+      user.setName(request.getName());
+    }
+    if(request.getBalance() != null){
+      user.setBalance(request.getBalance());
+    }
+     user = userRepository.save(user);
+
+    return convertToResponse(user);
+  
 }
 
 

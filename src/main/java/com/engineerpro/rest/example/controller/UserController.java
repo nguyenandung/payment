@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.engineerpro.rest.example.dto.GetUserBalanceRequest;
 import com.engineerpro.rest.example.dto.GetUserBalanceResponse;
+import com.engineerpro.rest.example.dto.UpdateUserRequest;
 import com.engineerpro.rest.example.service.UserService;
 
 import io.micrometer.core.annotation.Timed;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import com.engineerpro.rest.example.dto.CreateUserRequest;
 import com.engineerpro.rest.example.dto.UserResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
@@ -58,4 +60,14 @@ public class UserController {
 		Pageable pageable = PageRequest.of(page, size);
 		return ResponseEntity.ok(userService.getAllUsers(pageable));
 	}
+
+	@PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Integer id,
+            @Valid @RequestBody UpdateUserRequest request) {
+        
+        return ResponseEntity.ok(userService.updateUser(id, request));
+    }
+
+	
 }

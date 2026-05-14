@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.engineerpro.rest.example.model.User;
 
-import io.micrometer.core.annotation.Timed;
 import jakarta.persistence.LockModeType;
 
 @Repository
@@ -17,6 +16,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
  
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<User> findOneWithLockingById(int id);
+
+  boolean existsByNameAndIdNot(String name , Integer id);
+
+  Optional<User> findByName(String name);
 
   boolean existsByName(String name);
 }
